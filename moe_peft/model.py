@@ -550,7 +550,6 @@ class LLMModel(torch.nn.Module):
             llm_model = AutoModelForCausalLM.from_pretrained(
                 name_or_path,
                 device_map=device,
-                trust_remote_code=True,
                 quantization_config=BitsAndBytesConfig(
                     load_in_4bit=bits == 4,
                     load_in_8bit=bits == 8,
@@ -566,7 +565,6 @@ class LLMModel(torch.nn.Module):
             llm_model = AutoModelForCausalLM.from_pretrained(
                 name_or_path,
                 device_map=device,
-                trust_remote_code=True,
                 torch_dtype=load_dtype,
             )
 

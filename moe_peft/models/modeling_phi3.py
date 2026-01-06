@@ -189,7 +189,9 @@ class Phi3FlashAttention2(Phi3Attention):
     ) -> None:
         assert is_flash_attn_2_available(), "Flash Attention is not available"
         super().__init__(qkv_proj, o_proj, layer_idx, args)
-        self.sliding_window_ = args.sliding_window_
+        self.sliding_window_ = (
+            args.sliding_window_ if args.use_sliding_window_ else None
+        )
 
     def forward(
         self,

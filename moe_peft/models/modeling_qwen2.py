@@ -1,9 +1,10 @@
 from dataclasses import dataclass
-from typing import Optional, Tuple
+from typing import Optional, Tuple, Union
 
 import torch
 import torch.nn as nn
 from transformers.models.qwen2 import modeling_qwen2
+from transformers.models.qwen3 import modeling_qwen3
 
 from moe_peft.common import FeedForward, LLMCache, LLMModelInput
 from moe_peft.executors import executor
@@ -84,6 +85,7 @@ class Qwen2Attention(LlamaAttention):
         if (
             self.config_.use_sliding_window_
             and self.config_.sliding_window_ is not None
+            and self.config_.max_window_layers_ is not None
             and self.layer_idx >= self.config_.max_window_layers_
         ):
             sliding_window = self.config_.sliding_window_
@@ -121,12 +123,16 @@ class Qwen2ForCausalLM(LlamaForCausalLM):
 
     @staticmethod
     def from_pretrained(
-        llm_model: modeling_qwen2.Qwen2ForCausalLM,
+        llm_model: Union[
+            modeling_qwen2.Qwen2ForCausalLM, modeling_qwen3.Qwen3ForCausalLM
+        ],
         attn_impl: str = "eager",
         use_sliding_window: bool = False,
         device: str = executor.default_device_name(),
     ):
-        llm_config: modeling_qwen2.Qwen2Config = llm_model.config
+        llm_config: Union[
+            modeling_qwen2.Qwen2Config, modeling_qwen3.Qwen3Config
+        ] = llm_model.config
         llm_args = Qwen2Config(
             name_or_path_=llm_config.name_or_path,
             vocab_size_=llm_config.vocab_size,
@@ -144,10 +150,14 @@ class Qwen2ForCausalLM(LlamaForCausalLM):
             attn_implementation_=attn_impl,
             use_sliding_window_=use_sliding_window,
             sliding_window_=llm_config.sliding_window,
-            max_window_layers_=llm_config.max_window_layers,
+            max_window_layers_=getattr(llm_config, "max_window_layers", None),
             device_=torch.device(device),
             dtype_=llm_model.dtype,
         )
+
+        # Prefer config-provided sliding window flag when caller does not override
+        if hasattr(llm_config, "use_sliding_window") and not use_sliding_window:
+            llm_args.use_sliding_window_ = llm_config.use_sliding_window
 
         if llm_args.pad_token_id_ is None:
             llm_args.pad_token_id_ = -1

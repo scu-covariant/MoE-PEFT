@@ -431,6 +431,9 @@ class Gemma2ForCausalLM(LLMForCausalLM):
             dtype_=llm_model.dtype,
         )
 
+        if hasattr(llm_config, "use_sliding_window") and not use_sliding_window:
+            model_config.use_sliding_window_ = llm_config.use_sliding_window
+
         if model_config.pad_token_id_ is None:
             model_config.pad_token_id_ = -1
 
