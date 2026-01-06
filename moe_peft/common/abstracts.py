@@ -45,14 +45,19 @@ class LLMCache(torch.nn.Module):
     def reorder_cache(self, beam_idx: torch.LongTensor):
         for layer_idx in range(len(self.key_cache)):
             # Skip empty lists (used by DynamicCache for skipped layers)
-            if not (isinstance(self.key_cache[layer_idx], list) and len(self.key_cache[layer_idx]) == 0):
-                device = self.key_cache[layer_idx].device
-                self.key_cache[layer_idx] = self.key_cache[layer_idx].index_select(
+            key_cache_item = self.key_cache[layer_idx]
+            is_empty_list = isinstance(key_cache_item, list) and len(key_cache_item) == 0
+            if not is_empty_list:
+                device = key_cache_item.device
+                self.key_cache[layer_idx] = key_cache_item.index_select(
                     0, beam_idx.to(device)
                 )
-            if not (isinstance(self.value_cache[layer_idx], list) and len(self.value_cache[layer_idx]) == 0):
-                device = self.value_cache[layer_idx].device
-                self.value_cache[layer_idx] = self.value_cache[layer_idx].index_select(
+            
+            value_cache_item = self.value_cache[layer_idx]
+            is_empty_list = isinstance(value_cache_item, list) and len(value_cache_item) == 0
+            if not is_empty_list:
+                device = value_cache_item.device
+                self.value_cache[layer_idx] = value_cache_item.index_select(
                     0, beam_idx.to(device)
                 )
 
