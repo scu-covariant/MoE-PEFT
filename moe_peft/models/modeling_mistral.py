@@ -4,8 +4,6 @@ from typing import Optional, Tuple
 import torch
 import torch.nn as nn
 from transformers.models.mistral import modeling_mistral
-from transformers.models.qwen2 import modeling_qwen2
-from transformers.models.qwen3 import modeling_qwen3
 
 from moe_peft.common import FeedForward, LLMCache, LLMModelInput
 from moe_peft.executors import executor
@@ -26,7 +24,6 @@ from moe_peft.utils import copy_parameters
 class MistralConfig(LlamaConfig):
     use_sliding_window_: bool = False
     sliding_window_: int = None
-    max_window_layers_: int = None
 
 
 class MistralAttention(LlamaAttention):
@@ -145,16 +142,6 @@ class MistralForCausalLM(LlamaForCausalLM):
             device_=torch.device(device),
             dtype_=llm_model.dtype,
         )
-
-        # compatible with qwen2/3
-        if isinstance(
-            llm_config, (modeling_qwen2.Qwen2Config, modeling_qwen3.Qwen3Config)
-        ):
-            if hasattr(llm_config, "max_window_layers"):
-                llm_args.max_window_layers_ = llm_config.max_window_layers
-            # Prefer config-provided sliding window flag when caller does not override
-            if hasattr(llm_config, "use_sliding_window") and not use_sliding_window:
-                llm_args.use_sliding_window_ = llm_config.use_sliding_window
 
         if llm_args.pad_token_id_ is None:
             llm_args.pad_token_id_ = -1
