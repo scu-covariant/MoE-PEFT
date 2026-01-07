@@ -49,15 +49,19 @@ def _mixtral_load_balancing_loss_func(
             p=routing_weights,
             q=adapter_config.entropy_index_,
             eps=adapter_config.entropy_eps_,
+            normalize=True,
         )
     elif adapter_config.entropy_type_ == "renyi":
         router_entropy = renyi_entropy(
             p=routing_weights,
             a=adapter_config.entropy_index_,
             eps=adapter_config.entropy_eps_,
+            normalize=True,
         )
     else:
-        raise NotImplementedError()
+        raise NotImplementedError(
+            f"Unsupported entropy_type_: {adapter_config.entropy_type_}. Must be either 'tsallis' or 'renyi'."
+        )
 
     entropy_loss = router_entropy.mean()
 
@@ -115,9 +119,10 @@ def _mixtral_load_balancing_loss_func(
         )
 
         # Compute the average probability of routing to these experts
+        # Add epsilon to denominator to prevent division by zero
         router_prob_per_expert = torch.sum(
             routing_weights * router_per_expert_attention_mask, dim=0
-        ) / torch.sum(router_per_expert_attention_mask, dim=0)
+        ) / (torch.sum(router_per_expert_attention_mask, dim=0) + 1e-10)
 
     load_balance_loss = (
         torch.sum(tokens_per_expert * router_prob_per_expert.unsqueeze(0))
