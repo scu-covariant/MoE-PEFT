@@ -142,6 +142,8 @@ def mock_flash_attn(monkeypatch):
 
         ATTENTION_FUNCTIONS["flash_attn"] = fake_flash_attn
     except Exception:
+        # ATTENTION_FUNCTIONS may not exist in some moe_peft versions/environments;
+        # in that case, it's safe to skip updating this optional mapping in tests.
         pass
 
 
@@ -190,7 +192,7 @@ def test_gemma2_flash_attn_forward(dtype):
         device="cpu",
     )
     model = LLMModel(moe)
-    model.init_adapter(AdapterConfig(adapter_name="base", task_name="casual"))
+    model.init_adapter(AdapterConfig(adapter_name="base", task_name="causal"))
 
     outputs = model(build_batch("base"))
     out = outputs[0]
@@ -223,7 +225,7 @@ def test_phi_flash_attn_forward(dtype):
         device="cpu",
     )
     model = LLMModel(moe)
-    model.init_adapter(AdapterConfig(adapter_name="base", task_name="casual"))
+    model.init_adapter(AdapterConfig(adapter_name="base", task_name="causal"))
 
     outputs = model(build_batch("base"))
     out = outputs[0]
@@ -257,7 +259,7 @@ def test_phi3_flash_attn_forward(dtype):
         device="cpu",
     )
     model = LLMModel(moe)
-    model.init_adapter(AdapterConfig(adapter_name="base", task_name="casual"))
+    model.init_adapter(AdapterConfig(adapter_name="base", task_name="causal"))
 
     outputs = model(build_batch("base"))
     out = outputs[0]
@@ -313,7 +315,7 @@ if _HAS_CHATGLM:
                 device="cpu",
             )
             model = LLMModel(moe)
-            model.init_adapter(AdapterConfig(adapter_name="base", task_name="casual"))
+            model.init_adapter(AdapterConfig(adapter_name="base", task_name="causal"))
 
             outputs = model(build_batch("base"))
             out = outputs[0]

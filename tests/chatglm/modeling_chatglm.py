@@ -1,14 +1,9 @@
 # flake8: noqa
 """PyTorch ChatGLM model."""
 
-import copy
-import json
 import math
-import re
 import sys
-import warnings
-from copy import deepcopy
-from typing import Any, Callable, Dict, List, Optional, Tuple, Union
+from typing import Any, Dict, List, Optional, Tuple, Union
 
 import torch
 import torch.nn.functional as F
@@ -18,10 +13,7 @@ from torch.nn import BCEWithLogitsLoss, CrossEntropyLoss, LayerNorm, MSELoss
 from torch.nn.utils import skip_init
 from transformers.generation.logits_process import LogitsProcessor
 from transformers.generation.utils import (
-    GenerationConfig,
-    LogitsProcessorList,
     ModelOutput,
-    StoppingCriteriaList,
 )
 from transformers.modeling_outputs import (
     BaseModelOutputWithPast,
@@ -46,7 +38,9 @@ try:
             pad_input,
             unpad_input,
         )
-except:
+except ImportError:
+    # FlashAttention is an optional optimization; if import or availability checks fail,
+    # we silently fall back to the standard attention implementations.
     pass
 
 

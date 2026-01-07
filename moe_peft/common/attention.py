@@ -226,7 +226,7 @@ def eager_attention_forward(
     attention_mask: torch.Tensor,
     model_config: LLMModelConfig,
     scaling: Optional[float] = None,
-    softcap: Optional[float] = None,
+    softcap: Optional[float] = None,  # Softcap value for attention logits; applies tanh capping when provided
     **kwargs,
 ) -> torch.Tensor:
     if scaling is None:
@@ -405,6 +405,7 @@ def flash_attention_forward(
         and sliding_window is not None
         and key_states.shape[1] > sliding_window
     )
+    # Flash attention expects window size to be reduced by 1 for proper indexing
     flash_kwargs = (
         {"window_size": (sliding_window - 1, sliding_window - 1)}
         if use_sliding_windows
