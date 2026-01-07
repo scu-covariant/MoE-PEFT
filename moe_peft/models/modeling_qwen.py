@@ -123,12 +123,16 @@ class Qwen2ForCausalLM(LlamaForCausalLM):
 
     @staticmethod
     def from_pretrained(
-        llm_model,  # Union[modeling_qwen2.Qwen2ForCausalLM, modeling_qwen3.Qwen3ForCausalLM] when qwen3 is available
+        llm_model: Union[
+            modeling_qwen2.Qwen2ForCausalLM, modeling_qwen3.Qwen3ForCausalLM
+        ],
         attn_impl: str = "eager",
         use_sliding_window: bool = False,
         device: str = executor.default_device_name(),
     ):
-        llm_config = llm_model.config  # Union[modeling_qwen2.Qwen2Config, modeling_qwen3.Qwen3Config] when qwen3 is available
+        llm_config: Union[modeling_qwen2.Qwen2Config, modeling_qwen3.Qwen3Config] = (
+            llm_model.config
+        )
         llm_args = Qwen2Config(
             name_or_path_=llm_config.name_or_path,
             vocab_size_=llm_config.vocab_size,

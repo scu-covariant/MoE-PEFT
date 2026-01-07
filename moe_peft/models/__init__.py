@@ -5,8 +5,8 @@ from .modeling_llama import LlamaForCausalLM
 from .modeling_mistral import MistralForCausalLM
 from .modeling_phi import PhiForCausalLM
 from .modeling_phi3 import Phi3ForCausalLM
-from .modeling_qwen2 import Qwen2ForCausalLM
-from .modeling_qwen2 import Qwen2ForCausalLM as Qwen3ForCausalLM
+from .modeling_qwen import Qwen2ForCausalLM
+from .modeling_qwen import Qwen2ForCausalLM as Qwen3ForCausalLM
 
 model_dict = {
     "llama": LlamaForCausalLM,

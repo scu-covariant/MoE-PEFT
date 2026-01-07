@@ -19,7 +19,7 @@ from transformers.models.qwen2 import (  # type: ignore  # noqa: E402
 from moe_peft.common import AdapterConfig, LLMBatchConfig, LLMModelInput  # noqa: E402
 from moe_peft.model import LLMModel  # noqa: E402
 from moe_peft.models.modeling_llama import LlamaForCausalLM as MoeLlama  # noqa: E402
-from moe_peft.models.modeling_qwen2 import Qwen2ForCausalLM as MoeQwen2  # noqa: E402
+from moe_peft.models.modeling_qwen import Qwen2ForCausalLM as MoeQwen2  # noqa: E402
 
 
 def build_batch(adapter_name: str, seq_len: int = 16):

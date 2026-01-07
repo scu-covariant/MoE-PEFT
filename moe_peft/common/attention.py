@@ -226,7 +226,9 @@ def eager_attention_forward(
     attention_mask: torch.Tensor,
     model_config: LLMModelConfig,
     scaling: Optional[float] = None,
-    softcap: Optional[float] = None,  # Softcap value for attention logits; applies tanh capping when provided
+    softcap: Optional[
+        float
+    ] = None,  # Softcap value for attention logits; applies tanh capping when provided
     **kwargs,
 ) -> torch.Tensor:
     if scaling is None:
