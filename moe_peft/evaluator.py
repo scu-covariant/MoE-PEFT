@@ -43,7 +43,7 @@ class EvaluateConfig:
     def from_config(config: Dict[str, any]) -> List["EvaluateConfig"]:
         adapter_name = config["name"]
         data_path = config.get("data", None)
-        task_list = config.get("task_name", "casual").split(";")
+        task_list = config.get("task_name", "causal").split(";")
         path_list = (
             [None] * len(task_list) if data_path is None else data_path.split(";")
         )
@@ -65,8 +65,8 @@ class EvaluateConfig:
     def prepare(self, tokenizer: Tokenizer, device: str):
         self.reset_parameters()
         assert (
-            self.task_name != "casual"
-        ), "Auto evaluation is not currently available for casual supervised fine-tuning tasks."
+            self.task_name != "causal"
+        ), "Auto evaluation is not currently available for causal supervised fine-tuning tasks."
         self.task_ = task_dict[self.task_name]
         self.data_ = self._dataload_fn(tokenizer)
         self.metric_ = self.task_.loading_metric()

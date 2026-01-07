@@ -152,7 +152,7 @@ python launch.py run --base_model TinyLlama/TinyLlama_v1.1
 python inference.py \
   --base_model TinyLlama/TinyLlama_v1.1 \
   --template alpaca \
-  --lora_weights ./casual_0
+  --lora_weights ./causal_0
 ```
 
 For further detailed usage information, please refer to the `help` command:

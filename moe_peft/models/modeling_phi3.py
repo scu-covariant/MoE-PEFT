@@ -113,6 +113,7 @@ class Phi3Attention(LLMAttention):
         # config
         self.layer_idx_ = layer_idx
         self.args_ = args
+        self.config_ = args
         self.dim_ = args.dim_
         self.n_heads_ = args.n_heads_
         self.n_kv_heads_ = args.n_kv_heads_
@@ -176,7 +177,11 @@ class Phi3Attention(LLMAttention):
         key_states = repeat_kv(key_states, self.n_rep_)
 
         attn_output = eager_attention_forward(
-            query_states, key_states, value_states, attention_mask
+            query_states,
+            key_states,
+            value_states,
+            attention_mask,
+            model_config=self.config_,
         )
         attn_output = attn_output.reshape(bsz, q_len, -1)
 
@@ -330,10 +335,8 @@ class Phi3MLP(LLMFeedForward):
         self, hidden_states: torch.Tensor, input_args: LLMModelInput
     ) -> torch.Tensor:
         up_states = self.gate_up_proj_(hidden_states, input_args)
-
         gate, up_states = up_states.chunk(2, dim=-1)
         up_states = up_states * self.act_(gate)
-
         return self.down_proj_(up_states, input_args)
 
     def _lora_forward(
@@ -448,12 +451,8 @@ class Phi3DecoderLayer(LLMDecoder):
 class Phi3ForCausalLM(LLMForCausalLM):
     def _init_rope(self):
         if self.config_.rope_scaling_ is None:
-            return Phi3RotaryEmbedding(
-                self.config_.head_dim_,
-                max_position_embeddings=self.config_.max_seq_len_,
-                base=self.config_.rope_theta_,
-                device=self.config_.device_,
-            )
+            # Phi3RotaryEmbedding signature expects the model config
+            return Phi3RotaryEmbedding(self.config_)
         else:
             scaling_type = self.config_.rope_scaling_["type"]
             assert scaling_type == "longrope", ValueError(
