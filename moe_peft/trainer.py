@@ -41,7 +41,7 @@ class TrainConfig(DispatcherConfig):
     lr_scheduler_: torch.optim.lr_scheduler.LRScheduler = None
     accumulation_step_: int = None
     training_steps_: int = 0
-    task_name: str = "casual"
+    task_name: str = "causal"
     task_: BasicTask = None
     group_by_length: bool = False
     # task settings
@@ -56,7 +56,7 @@ class TrainConfig(DispatcherConfig):
         batch_size = config["batch_size"]
         return TrainConfig(
             adapter_name=config["name"],
-            task_name=config.get("task_name", "casual"),
+            task_name=config.get("task_name", "causal"),
             num_epochs=config["num_epochs"],
             batch_size=batch_size,
             micro_batch_size=config.get("micro_batch_size", batch_size),
@@ -143,7 +143,7 @@ class TrainConfig(DispatcherConfig):
             self.evaluate_configs_ = []
 
         # preparing for training task
-        if self.task_name == "casual":
+        if self.task_name == "causal":
             self.task_ = CasualTask()
         elif ";" in self.task_name:
             self.task_ = MultiTask(self.task_name)

@@ -451,7 +451,7 @@ class Phi3DecoderLayer(LLMDecoder):
 class Phi3ForCausalLM(LLMForCausalLM):
     def _init_rope(self):
         if self.config_.rope_scaling_ is None:
-            # Gemma2RotaryEmbedding signature expects the model config
+            # Phi3RotaryEmbedding signature expects the model config
             return Phi3RotaryEmbedding(self.config_)
         else:
             scaling_type = self.config_.rope_scaling_["type"]

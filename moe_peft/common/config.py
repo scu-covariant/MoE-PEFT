@@ -89,7 +89,7 @@ class LLMModelInput:
 @dataclass
 class AdapterConfig:
     adapter_name: str = ""
-    task_name: str = "casual"
+    task_name: str = "causal"
 
     @staticmethod
     def from_config(config: Dict[str, any]) -> "AdapterConfig":

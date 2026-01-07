@@ -59,7 +59,7 @@ def test_gemma_eager_minimal_forward(dtype):
         hf_model, attn_impl="eager", use_sliding_window=False, device="cpu"
     )
     model = LLMModel(moe)
-    model.init_adapter(AdapterConfig(adapter_name="base", task_name="casual"))
+    model.init_adapter(AdapterConfig(adapter_name="base", task_name="causal"))
 
     outputs = model(build_batch("base"))
     out = outputs[0]
@@ -94,7 +94,7 @@ def test_phi_eager_minimal_forward(dtype):
         hf_model, attn_impl="eager", use_sliding_window=False, device="cpu"
     )
     model = LLMModel(moe)
-    model.init_adapter(AdapterConfig(adapter_name="base", task_name="casual"))
+    model.init_adapter(AdapterConfig(adapter_name="base", task_name="causal"))
 
     outputs = model(build_batch("base"))
     out = outputs[0]

@@ -138,10 +138,10 @@ def gen_config(
             elif task_name not in moe_peft.tasks.task_dict:
                 try:
                     load_dataset(task_name)
-                except:
+                except Exception:
                     raise RuntimeError(f"Task name '{task_name}' not exist.")
-                lora_config["name"] = f"casual_{index}"
-                lora_config["task_name"] = "casual"
+                lora_config["name"] = f"causal_{index}"
+                lora_config["task_name"] = "causal"
                 lora_config["data"] = task_name
                 lora_config["prompt"] = "alpaca"
             else:

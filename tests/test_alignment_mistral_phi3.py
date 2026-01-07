@@ -65,7 +65,7 @@ def test_mistral_alignment_minimal_forward(dtype):
         hf_model, attn_impl="eager", use_sliding_window=False, device="cpu"
     )
     model = LLMModel(moe)
-    model.init_adapter(AdapterConfig(adapter_name="base", task_name="casual"))
+    model.init_adapter(AdapterConfig(adapter_name="base", task_name="causal"))
 
     batch = build_batch("base", seq_len=12)
     outputs = model(batch)
@@ -97,7 +97,7 @@ def test_phi3_alignment_minimal_forward(dtype):
         hf_model, attn_impl="eager", use_sliding_window=False, device="cpu"
     )
     model = LLMModel(moe)
-    model.init_adapter(AdapterConfig(adapter_name="base", task_name="casual"))
+    model.init_adapter(AdapterConfig(adapter_name="base", task_name="causal"))
 
     batch = build_batch("base", seq_len=12)
     outputs = model(batch)
