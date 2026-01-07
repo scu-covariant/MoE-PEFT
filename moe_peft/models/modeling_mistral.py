@@ -4,15 +4,6 @@ from typing import Optional, Tuple
 import torch
 import torch.nn as nn
 from transformers.models.mistral import modeling_mistral
-from transformers.models.qwen2 import modeling_qwen2
-
-try:
-    from transformers.models.qwen3 import modeling_qwen3
-    HAS_QWEN3 = True
-except ImportError:
-    modeling_qwen3 = None
-    HAS_QWEN3 = False
-
 from transformers.utils import is_flash_attn_2_available
 
 from moe_peft.common import (
@@ -216,18 +207,6 @@ class MistralForCausalLM(LlamaForCausalLM):
             device_=torch.device(device),
             dtype_=llm_model.dtype,
         )
-
-        # compatible with qwen2/3
-        qwen_configs = (modeling_qwen2.Qwen2Config,)
-        if HAS_QWEN3:
-            qwen_configs = (modeling_qwen2.Qwen2Config, modeling_qwen3.Qwen3Config)
-        
-        if isinstance(llm_config, qwen_configs):
-            if hasattr(llm_config, "max_window_layers"):
-                llm_args.max_window_layers_ = llm_config.max_window_layers
-            # Prefer config-provided sliding window flag when caller does not override
-            if hasattr(llm_config, "use_sliding_window") and not use_sliding_window:
-                llm_args.use_sliding_window_ = llm_config.use_sliding_window
 
         if llm_args.pad_token_id_ is None:
             llm_args.pad_token_id_ = -1

@@ -4,13 +4,7 @@ from typing import Optional, Tuple, Union
 import torch
 import torch.nn as nn
 from transformers.models.qwen2 import modeling_qwen2
-
-try:
-    from transformers.models.qwen3 import modeling_qwen3
-    HAS_QWEN3 = True
-except ImportError:
-    modeling_qwen3 = None
-    HAS_QWEN3 = False
+from transformers.models.qwen3 import modeling_qwen3
 
 from moe_peft.common import FeedForward, LLMCache, LLMModelInput
 from moe_peft.executors import executor
