@@ -228,6 +228,3 @@ class TestEntropyEdgeCases:
         assert not torch.isnan(entropy_r).any()
         assert not torch.isinf(entropy_r).any()
 
-
-if __name__ == "__main__":
-    pytest.main([__file__, "-v"])
