@@ -7,9 +7,7 @@ from .abstracts import LLMDecoder, LLMModelInput
 
 
 @torch.jit.script
-def tsallis_entropy(
-    p: torch.Tensor, q: float, normalize: bool = True, eps: float = 1e-5
-) -> torch.Tensor:
+def tsallis_entropy(p: torch.Tensor, q: float, normalize: bool = True) -> torch.Tensor:
     N = p.size(dim=-1)
     if q == 1.0:
         ent_terms = torch.where(p > 0, p * torch.log(p), torch.zeros_like(p))
@@ -27,16 +25,12 @@ def tsallis_entropy(
         return entropy
 
 
-def shannon_entropy(
-    p: torch.Tensor, normalize: bool = True, eps: float = 1e-5
-) -> torch.Tensor:
-    return tsallis_entropy(p, 1.0, normalize, eps)
+def shannon_entropy(p: torch.Tensor, normalize: bool = True) -> torch.Tensor:
+    return tsallis_entropy(p, 1.0, normalize)
 
 
 @torch.jit.script
-def renyi_entropy(
-    p: torch.Tensor, a: float, normalize: bool = True, eps: float = 1e-5
-) -> torch.Tensor:
+def renyi_entropy(p: torch.Tensor, a: float, normalize: bool = True) -> torch.Tensor:
     N = p.size(dim=-1)
     if a == 1.0:
         ent_terms = torch.where(p > 0, p * torch.log(p), torch.zeros_like(p))

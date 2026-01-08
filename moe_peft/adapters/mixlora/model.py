@@ -48,14 +48,12 @@ def _mixtral_load_balancing_loss_func(
         router_entropy = tsallis_entropy(
             p=routing_weights,
             q=adapter_config.entropy_index_,
-            eps=adapter_config.entropy_eps_,
             normalize=True,
         )
     elif adapter_config.entropy_type_ == "renyi":
         router_entropy = renyi_entropy(
             p=routing_weights,
             a=adapter_config.entropy_index_,
-            eps=adapter_config.entropy_eps_,
             normalize=True,
         )
     else:

@@ -26,7 +26,6 @@ class MixLoraConfig(LoraConfig):
     router_dyn_loss_coef_: float = None
     entropy_index_: float = None
     entropy_type_: str = None
-    entropy_eps_: float = None
     top_k_: int = None
     # dynamic config
     top_p_: float = None
@@ -69,7 +68,6 @@ class MixLoraConfig(LoraConfig):
                 "tsallis",
                 "renyi",
             ]
-            assert isinstance(self.entropy_eps_, float) and self.entropy_eps_ > 0
             assert isinstance(self.top_k_, int) and self.top_k_ > 0
         elif self.routing_strategy_ == "mixlora-dynamic":
             assert (
@@ -110,7 +108,6 @@ class MixLoraConfig(LoraConfig):
             )  # for training
             lora_config.entropy_index_ = config.get("entropy_index", 1.4)
             lora_config.entropy_type_ = config.get("entropy_type", "tsallis")
-            lora_config.entropy_eps_ = config.get("entropy_eps", 1e-5)
             lora_config.router_init_range_ = config.get("router_init_range", 0.02)
             lora_config.jitter_noise_ = config.get("jitter_noise", 0.0)
             lora_config.top_k_ = config.get("top_k", 2)
