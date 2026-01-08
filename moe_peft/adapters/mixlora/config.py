@@ -64,10 +64,7 @@ class MixLoraConfig(LoraConfig):
                 and self.router_dyn_loss_coef_ >= 0
             )
             # entropy_index_ (Tsallis q or Rényi α) can be any positive real number
-            assert (
-                isinstance(self.entropy_index_, float)
-                and self.entropy_index_ > 0
-            )
+            assert isinstance(self.entropy_index_, float) and self.entropy_index_ > 0
             assert isinstance(self.entropy_type_, str) and self.entropy_type_ in [
                 "tsallis",
                 "renyi",

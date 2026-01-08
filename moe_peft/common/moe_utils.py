@@ -11,13 +11,15 @@ def tsallis_entropy(
     p: torch.Tensor, q: float, normalize: bool = True, eps: float = 1e-5
 ) -> torch.Tensor:
     N = p.size(dim=-1)
-    p_safe = p + eps
     if q == 1.0:
-        entropy = -torch.sum(p_safe * torch.log(p_safe), dim=-1)
+        ent_terms = torch.where(p > 0, p * torch.log(p), torch.zeros_like(p))
+        entropy = -torch.sum(ent_terms, dim=-1)
         max_entropy = torch.log(torch.tensor(N, dtype=p.dtype, device=p.device))
     else:
-        entropy = (1 - torch.sum(p_safe**q, dim=-1)) / (q - 1)
-        max_entropy = torch.tensor((1 - N ** (1 - q)) / (q - 1), dtype=p.dtype, device=p.device)
+        entropy = (1 - torch.sum(p**q, dim=-1)) / (q - 1)
+        max_entropy = torch.tensor(
+            (1 - N ** (1 - q)) / (q - 1), dtype=p.dtype, device=p.device
+        )
 
     if normalize:
         return entropy / max_entropy
@@ -36,11 +38,12 @@ def renyi_entropy(
     p: torch.Tensor, a: float, normalize: bool = True, eps: float = 1e-5
 ) -> torch.Tensor:
     N = p.size(dim=-1)
-    p_safe = p + eps
     if a == 1.0:
-        entropy = -torch.sum(p_safe * torch.log(p_safe), dim=-1)
+        ent_terms = torch.where(p > 0, p * torch.log(p), torch.zeros_like(p))
+        entropy = -torch.sum(ent_terms, dim=-1)
     else:
-        entropy = 1 / (1 - a) * torch.log(torch.sum(p_safe**a, dim=-1))
+        sum_pa = torch.sum(p**a, dim=-1)
+        entropy = 1 / (1 - a) * torch.log(sum_pa)
 
     max_entropy = torch.log(torch.tensor(N, dtype=p.dtype, device=p.device))
     if normalize:

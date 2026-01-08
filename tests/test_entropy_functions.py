@@ -3,7 +3,6 @@
 import os
 import sys
 
-import pytest
 import torch
 
 REPO_ROOT = os.path.dirname(os.path.dirname(__file__))
@@ -227,4 +226,3 @@ class TestEntropyEdgeCases:
         entropy_r = renyi_entropy(p, a=3.0, normalize=True)
         assert not torch.isnan(entropy_r).any()
         assert not torch.isinf(entropy_r).any()
-
