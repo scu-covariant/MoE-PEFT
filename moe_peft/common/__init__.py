@@ -50,11 +50,11 @@ from .lora_linear import Linear, Lora, get_range_tensor
 # MoEs
 from .moe_utils import (
     collect_plugin_router_logtis,
-    slice_tensor,
-    unpack_router_logits,
-    tsallis_entropy,
-    shannon_entropy,
     renyi_entropy,
+    shannon_entropy,
+    slice_tensor,
+    tsallis_entropy,
+    unpack_router_logits,
 )
 from .rope import ROPE_INIT_FUNCTIONS
 
