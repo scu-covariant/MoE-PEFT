@@ -197,6 +197,8 @@ def _compute_metrcis(model, current_configs, sequence_lengths, batch_labels, out
             dtype=task.label_dtype_,
             device=logits.device,
         )
+        if labels.dim() > 1 and labels.shape[-1] == 1:
+            labels = labels.squeeze(-1)
         if task.task_type_ == "common_sense":
             pooled_logits = pooled_logits[:, config.label_indices_]
             pooled_logits = pooled_logits.softmax(-1).argmax(-1)
