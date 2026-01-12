@@ -287,6 +287,8 @@ def _upad_input(
     if kv_seq_len > attention_mask.shape[-1]:
         key_layer = key_layer[:, : attention_mask.shape[-1], :, :]
         value_layer = value_layer[:, : attention_mask.shape[-1], :, :]
+        # Update kv_seq_len to reflect the sliced length to avoid invalid reshape sizes
+        kv_seq_len = key_layer.shape[1]
 
     key_layer = index_first_axis(
         key_layer.reshape(batch_size * kv_seq_len, num_key_value_heads, head_dim),
