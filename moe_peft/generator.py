@@ -100,7 +100,7 @@ def logits_process(
     repetition_penalty=1.1,
     renormalize_logits=True,
 ):
-    process_conditions = repetition_penalty > 0
+    process_conditions = repetition_penalty > 0 and repetition_penalty != 1.0
     sample_conditions = any([temperature > 0, top_p > 0 and top_p <= 1.0, top_k > 0])
 
     # Greedy path
